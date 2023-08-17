@@ -1,0 +1,134 @@
+{% extends 'store/layouts/main.html' %}
+  
+{% block content %}
+
+<style>
+    /* Custom CSS styles for the collections */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+    }
+  
+    
+  
+    h1 {
+      text-align: center;
+      font-size: 36px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 30px;
+    }
+  
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  
+    .col-md-3 {
+      flex: 0 0 calc(20% - 20px); /* Adjust the width of the card */
+      max-width: calc(20% - 20px); /* Adjust the width of the card */
+      margin: 10px;
+      box-sizing: border-box;
+    }
+  
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      transition: box-shadow 0.3s;
+      height: 100%; /* Set a fixed height for the card */
+    }
+  
+    .card:hover {
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    }
+  
+
+    .card-body {
+      padding: 20px;
+      height: 100%; /* Set a fixed height for the card body */
+    }
+  
+    h4 {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin: 0;
+      padding: 10px 0;
+      text-align: center;
+      background-color: #f9f9f9; /* Add background color to h4 element */
+      border-top: 1px solid #ccc; /* Add top border to separate from image */
+    }
+
+    .card a {
+      text-decoration: none;
+      color: inherit; /* Preserve the text color */
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .custom-navbar {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 0;
+    }
+
+    .custom-navbar a {
+      text-decoration: none;
+      color: #fff;
+      margin-right: 10px;
+    }
+
+    .custom-navbar a:last-child {
+      margin-right: 0;
+    }
+
+    .custom-navbar a span {
+      color: white; /* Style the forward slashes (/) with white color */
+      margin: 0 5px; /* Add some spacing around the forward slashes */
+    }
+
+    .custom-navbar a:hover {
+      text-decoration: underline;
+    }
+</style>
+
+<!-- First navbar -->
+<div class="py-3 custom-navbar">
+  <div class="container">
+    <a href="{% url 'home' %}">Home</a>
+    <span>/</span>
+    <a href="{% url 'collections' %}">Collections</a>
+    <span>/</span>
+    <a href="{% url 'collectionsview' 'category.slug' %}">{{category.name}}</a>
+  </div>
+</div>
+
+<!-- Second navbar -->
+
+<div class="container">
+  <h1>{{category.name}}</h1>
+  <div class="row">
+    {% for item in products %}
+      <div class="col-md-3">
+        <div class="card">
+          <a href="{% url 'productview' item.category.slug item.slug %}">
+            <div class="category-image">
+              <img src="{{ item.product_image.url }}" alt="Products image" class="w-100" />
+            </div>
+            <div class="card-body">
+              <h4>{{ item.name }}</h4>
+            </div>
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock content %}

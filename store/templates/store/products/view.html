@@ -1,0 +1,290 @@
+{% extends 'store/layouts/main.html' %}
+  
+{% block content %}
+
+<style>
+    /* Custom CSS styles for the product view page */
+  
+    /* General styles */
+    a {
+      text-decoration: none;
+    }
+  
+    /* Product view tag */
+    .product-viewtag {
+      background-color: #FF00FF;
+      color: #fff;
+      font-size: 11px;
+      line-height: 1;
+      position: absolute;
+      text-align: center;
+      text-transform: uppercase;
+      top: 22px;
+      left: 22rem;
+      padding: 7px 10px;
+      font-weight: 600;
+      min-width: 45px;
+    }
+  
+    /* Product navigation bar */
+    .py-3 {
+      background-color: #007bff;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+  
+    .text-white {
+      color: #fff;
+    }
+  
+    /* Product card */
+    .py-5 {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+  
+    .card {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+  
+    .card-body {
+      padding: 2rem;
+    }
+  
+    /* Product image */
+    .col-md-4 img {
+      width: 100%;
+      border-radius: 8px 8px 0 0;
+    }
+  
+    /* Product details */
+    .col-md-8 h2 {
+      font-size: 24px;
+      font-weight: bold;
+    }
+  
+    .col-md-8 hr {
+      border: 0;
+      border-top: 1px solid #ccc;
+      margin: 1rem 0;
+    }
+  
+    .col-md-8 label {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  
+    /* Quantity input group */
+    .quantity-group {
+        display: flex;
+         /* Align items to the bottom */
+        justify-content: center;
+        width: 100%;
+        flex-direction: column;
+        margin-bottom: 10px;
+        margin-top: 50px; /* Add some bottom margin to create space */
+      }
+    .quantity-group label {
+        font-size: 15px; /* Center the "Quantity" label */
+        padding: 5px;
+        color: black;
+        margin-right: 46rem;
+      }
+  
+    .quantity-btn {
+      cursor: pointer;
+      text-align: center;
+      padding: 0 10px;
+    }
+  
+    .quantity-input {
+      width: 40px;
+      text-align: center;
+      font-size: 14px;
+      padding: 5px;
+    }
+  
+    /* Description section */
+    h3 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+  
+    p {
+      font-size: 16px;
+    }
+  
+    /* Trending tag */
+    .trending_tag {
+      background-color: #dc3545;
+      color: #fff;
+      padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+    }
+  
+    /* Buttons */
+    .btn {
+      font-size: 16px;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+    }
+  
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+    }
+  
+    .btn-success {
+      background-color: #28a745;
+      border-color: #28a745;
+      color: #fff;
+    }
+  
+    
+  
+    .float-start {
+      float: left;
+    }
+  
+    .float-end {
+      float: right;
+    }
+    .original-price {
+        color: grey;
+        font-weight: normal;
+      }
+      .custom-navbar {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 0;
+      }
+    
+      .custom-navbar a {
+        text-decoration: none;
+        color: #fff;
+        margin-right: 10px;
+      }
+    
+      .custom-navbar a:last-child {
+        margin-right: 0;
+      }
+    
+      .custom-navbar a span {
+        color: white; /* Style the forward slashes (/) with white color */
+        margin: 0 5px; /* Add some spacing around the forward slashes */
+      }
+    
+      .custom-navbar a:hover {
+        text-decoration: underline;
+      }
+      .product-quantity {
+        position: absolute;
+        top: 15px; /* Adjust the top value as per your requirement */
+        left: 75rem; /* Adjust the left value as per your requirement */
+        padding: 5px 8px;
+        background-color: red;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 4px;
+        
+      }
+      .A {
+        font-weight: bold; /* Apply bold font */
+        font-style: italic; /* Apply italic font style */
+        font-size: 18px; /* Change font size (adjust as per your preference) */
+        /* Add any other custom styles you want for the "A" class here */
+    }
+    </style>
+    
+    <div class="py-3 custom-navbar">
+      <div class="container">
+        <a href="{% url 'home' %}">Home</a>
+        <span>/</span>
+        <a href="{% url 'collections' %}">Collections</a>
+        <span>/</span>
+        <a href="{% url 'collectionsview' products.category.slug %}">{{products.category.name}}</a>
+        <span>/</span>
+        <a href="{% url 'productview' products.category.slug products.slug %}">{{products.name}}</a>
+      </div>
+    </div>
+  
+<div class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow product_data">
+                    <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-4 zoom-container" id="product-image-container">
+                            {% if products.tag %}
+                                <label class="product-viewtag">{{products.tag}}</label>
+                            {% endif %}
+                            <img src="{{products.product_image.url}}" class="w-100" alt="image">
+                          </div>
+                        
+
+
+                            <div class="col-md-8">
+
+                                <h2 class="mb-0"> 
+                                    {{ products.name }}
+                                    {% if products.trending %}
+                                        <label class="float-end badge bg-danger trending_tag">Trending</label>
+                                    {% endif %}
+                                </h2>
+                                <hr>
+                                <label class="me-3 original-price">Original Price: <s>{{ products.original_price|stringformat:'d' }}TND</s></label>
+                                <label class="fw-bold">Selling Price: {{ products.selling_price|stringformat:'d' }}TND</label>
+                                <hr>
+                                {% if products.quantity > 0 %}
+                                     <label class="badge bg-success">In Stock (Quantity: {{ products.quantity }})</label>
+                                {% else %}
+                                    <label class="badge bg-danger">Out of Stock</label>
+                                {% endif %}    
+                                <hr>
+                                <p class="A" > Specs : {{ products.small_description }}</p>
+                                
+                                <div class="quantity-group">
+                                  {% csrf_token %}
+                                  <input type="hidden" value="{{products.id}}" class="prod_id" >
+                                  <label for="Quantity">Quantity</label>
+                                  <div class="input-group text-center">
+                                      <button class="quantity-btn decrement-btn">-</button>
+                                      <input type="text" name="quantity" class="quantity-input" value="1">
+                                      <button class="quantity-btn increment-btn">+</button>
+                                  </div>
+                              </div>
+                                <br>
+                                {% if products.quantity > 0 %}
+                                    <button type="button" class="btn btn-primary me-3 float-start addtocartbtn">Add to Cart <i class="fa fa-shopping-cart"></i></button>
+                                {% endif %} 
+                                <button type="button" class="btn btn-success  me-3 addtowishlist float-start">Add to Wishlist <i class="fa fa-heart"></i></button>
+
+                            </div>
+
+
+                        </div>        
+                        <div class="col-md-12">
+                            <hr>
+                            <h3>Descrirption</h3>
+                            <p class="mt-3">
+                                {{products.description}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>                 
+
+
+
+    
+{% endblock content %}

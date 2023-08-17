@@ -1,0 +1,153 @@
+{% extends 'store/layouts/main.html' %}
+
+{% block content %}
+<style>
+    /* Custom CSS styles for the product view page */
+    /* ... (Your existing CSS styles) ... */
+
+    /* Additional CSS styles for the cart page */
+    /* ... (Your existing CSS styles) ... */
+
+    /* Custom styles for the checkout page */
+    .checkout-section {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .left-column {
+        flex: 1;
+    }
+
+    .right-column {
+        flex: 1;
+    }
+
+    .product_summary {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .product_summary img {
+        max-width: 50px;
+        max-height: 50px;
+        margin-right: 10px;
+    }
+    .custom-navbar {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 0;
+      }
+    
+      .custom-navbar a {
+        text-decoration: none;
+        color: #fff;
+        margin-right: 10px;
+      }
+    
+      .custom-navbar a:last-child {
+        margin-right: 0;
+      }
+    
+      .custom-navbar a span {
+        color: white; /* Style the forward slashes (/) with white color */
+        margin: 0 5px; /* Add some spacing around the forward slashes */
+      }
+    
+      .custom-navbar a:hover {
+        text-decoration: underline;
+      }
+
+      .table-bordered tbody tr.pending {
+        background-color: #fff59d; /* Yellow background for pending orders */
+    }
+
+    .table-bordered tbody tr.completed {
+        background-color: #c8e6c9; /* Green background for completed orders */
+    }
+
+    /* Add styles for status text */
+    .status-text {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .status-text.completed {
+        background-color: #c8e6c9;
+    }
+
+    .status-text.pending {
+        background-color: #fff59d;
+    }
+    .message-badge {
+      position: absolute; /* Change position to relative */
+      background-color: white;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 50%;
+      font-size: 19px;
+      margin-left:98px;
+      margin-top:-10px;
+
+    }
+</style>
+
+<div class="py-3 custom-navbar">
+    <div class="container">
+        <a href="{% url 'home' %}">Home</a>
+        <span>/</span>
+        <a href="{% url 'myorder' %}">My Order</a>
+        <span>/</span>
+    </div>
+</div>
+
+<div class="container mt-3">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="card shadow">
+            <div class="card-header">
+              <h3> My order</h3>
+            </div>  
+              <div class="card-body checkoutform">
+                  <div class="table-responsive">
+                      <table class="table table-bordered">
+                          <thead>
+                              <tr>
+                                  <th>Order Date</th>
+                                  <th>Tracking number</th>
+                                  <th>Total price</th>
+                                  <th>Status</th>
+                                  <th>Action</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for item in orders %}
+                              <tr>
+                                  <td>{{ item.created_at }}</td>
+                                  <td>{{ item.tracking_no }}</td>
+                                  <td>{{ item.total_price }}</td>
+                                  <td>
+                                      <span class="status-text {% if item.status == 'Completed' %}completed{% else %}pending{% endif %}">
+                                          {{ item.status }}
+                                          {% if item.tracking_no in orders_with_message_tracking_numbers %}
+                                          <span class="message-badge" title="Message from Seller">📩</span>
+                                          {% endif %}
+                                      </span>
+                                  </td>
+                                  <td>
+                                      <a href="{% url 'orderview' item.tracking_no %}" class="btn btn-primary">View</a>
+                                  </td>
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endblock content %}

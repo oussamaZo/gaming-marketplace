@@ -1,0 +1,96 @@
+{% extends 'store/layouts/main.html' %}
+
+
+{% block content %}
+<style>
+  /* Custom CSS styles for the login form */
+  .login-form {
+    max-width: 400px;
+    margin: 100px auto 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-control {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .user-login-header {
+    text-align: center;
+    color: red;
+    font-size: 35px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: -20px;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+  .form-label {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .btn-primary {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: green;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Button takes full width */
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .error-message {
+    color: red;
+    font-size: 14px;
+  }
+</style>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <form class="login-form" method="post">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="form-group col-md-12 user-login-header">
+            User Login
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="">Username</label>
+          <input type="text" name="username" class="form-control" placeholder="Enter your username">
+        </div>
+        
+        <div class="form-group">
+          <label for="">Password</label>
+          <input type="password" name="password" class="form-control" placeholder="Enter your Password">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

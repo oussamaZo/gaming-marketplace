@@ -1,0 +1,175 @@
+{% extends 'store/layouts/main.html' %}
+
+{% block content %}
+<style>
+    /* Custom CSS styles for the product view page */
+    /* ... (Your existing CSS styles) ... */
+
+    /* Additional CSS styles for the cart page */
+
+    /* Style the product rows in the cart */
+    .product_data {
+        border-bottom: 1px solid #e0e0e0;
+        padding: 10px 0;
+    }
+
+    /* Style the product image */
+    .product_data img {
+        max-width: 90px;
+        max-height: 90px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    /* Style the product name */
+    .product_data h6 {
+        margin: 10px 0;
+        font-weight: bold;
+    }
+
+    /* Style the product price */
+    .product_data .product-price {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    /* Style the quantity input and buttons */
+    .quantity-input {
+        width: 50px;
+        text-align: center;
+    }
+
+    .quantity-btn {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 5px 10px;
+        margin: 0;
+    }
+
+    /* Style the remove button */
+    .delete-cart-item {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 5px 10px;
+        margin-top: 5px;
+    }
+
+    /* Custom navbar styles */
+    .custom-navbar {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 0;
+      }
+    
+      .custom-navbar a {
+        text-decoration: none;
+        color: #fff;
+        margin-right: 10px;
+      }
+    
+      .custom-navbar a:last-child {
+        margin-right: 0;
+      }
+    
+      .custom-navbar a span {
+        color: white; /* Style the forward slashes (/) with white color */
+        margin: 0 5px; /* Add some spacing around the forward slashes */
+      }
+    
+      .custom-navbar a:hover {
+        text-decoration: underline;
+      }
+      .empty-cart-message {
+        text-align: center;
+    }
+    
+    .btn-checkout {
+        background-color: #28a745; /* Green color */
+        border-color: #28a745;
+        color: #fff;
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        margin-top:10px;
+        text-decoration: none; /* Remove underline from the link */
+        margin-left: 1060px;
+    }
+
+    /* Hover effect for the checkout button */
+    .btn-checkout:hover {
+        background-color: #218838; /* Darker shade of green on hover */
+    }
+    
+</style>
+
+<!-- Custom Navbar -->
+<div class="py-3 custom-navbar">
+    <div class="container">
+        <a href="{% url 'home' %}">Home</a>
+        <span>/</span>
+        <a href="{% url 'cart' %}">Cart</a>
+        <span>/</span>
+    </div>
+</div>
+
+<!-- Cart Items -->
+<div class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-body cartdata">
+                        {% if cart %}
+                            {% for item in cart %}
+                                <div class="row product_data">
+                                    <div class="col-md-2 my-auto">
+                                        <img src="{{ item.product.product_image.url }}" alt="Product Image">
+                                    </div>
+                                    <div class="col-md-3 my-auto">
+                                        <h6>{{ item.product.name }}</h6>
+                                    </div>
+                                    <div class="col-md-2 my-auto">
+                                        <h6 class="product-price"> {{ item.product.selling_price|stringformat:'d' }} TND</h6>
+                                    </div>
+                                    <div class="col-md-3 my-auto">
+                                        <input type="hidden" class="prod_id" value="{{ item.product_id }}">
+                                        {% csrf_token %}
+                                        {% if item.product.quantity >= item.product_qty %}
+                                            <label for="Quantity" class="small-label">Quantity</label>
+                                            <div class="input-group text-center small-input-group">
+                                                <button class="quantity-btn changeQuantity decrement-btn" data-prod-id="{{ item.product_id }}">-</button>
+                                                <input type="text" name="quantity_{{ item.product_id }}" id="quantity_{{ item.product_id }}" class="quantity-input small-input" value="{{ item.product_qty }}">
+                                                <button class="quantity-btn changeQuantity increment-btn" data-prod-id="{{ item.product_id }}">+</button>
+                                            </div>
+                                        {% else %}
+                                            <h6>Out of Stock</h6>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-2 my-auto">
+                                        <button class="btn btn-danger delete-cart-item"><i class="fa fa-trash"></i> Remove</button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <a href="{% url 'checkout' %}" class="btn btn-checkout">Checkout</a>
+                        {% else %}
+                        
+                        <div class="empty-cart-message">
+                            <h6>Your Cart is empty</h6>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}

@@ -1,0 +1,276 @@
+{% extends 'store/layouts/main.html' %}
+
+{% block content %}
+<style>
+    /* Custom CSS styles for the product view page */
+    /* ... (Your existing CSS styles) ... */
+
+    /* Additional CSS styles for the cart page */
+    /* ... (Your existing CSS styles) ... */
+
+    /* Custom styles for the checkout page */
+    .checkout-section {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .left-column {
+        flex: 1;
+    }
+
+    .right-column {
+        flex: 1;
+    }
+
+    .product_summary {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .product_summary img {
+        max-width: 50px;
+        max-height: 50px;
+        margin-right: 10px;
+    }
+    .custom-navbar {
+        background-color: #333;
+        color: #fff;
+        padding: 10px 0;
+      }
+    
+      .custom-navbar a {
+        text-decoration: none;
+        color: #fff;
+        margin-right: 10px;
+      }
+    
+      .custom-navbar a:last-child {
+        margin-right: 0;
+      }
+    
+      .custom-navbar a span {
+        color: white; /* Style the forward slashes (/) with white color */
+        margin: 0 5px; /* Add some spacing around the forward slashes */
+      }
+    
+      .custom-navbar a:hover {
+        text-decoration: underline;
+      }
+      .shipping-details {
+        margin-top: 30px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .shipping-details h4 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .shipping-details label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .shipping-details .border {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .shipping-details .border p {
+        margin: 0;
+    }
+
+    /* Custom styles for the product info table */
+    .product-info-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .product-info-table th,
+    .product-info-table td {
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+
+    .product-info-table th {
+        background-color: #f2f2f2;
+        text-align: center;
+    }
+
+    .product-info-table img {
+        height: 50px;
+        width: 50px;
+    }
+
+    /* Styles for the grand total and other info */
+    .total-info {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .total-info h4,
+    .total-info h6 {
+        margin: 0;
+    }
+    .seller-message {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f8f8f8;
+        border: 2px solid #ff6f00; /* Orange border for the seller message */
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+         /* Center the "Message from Seller" header */
+    }
+
+    .seller-message h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #ff6f00; /* Orange color for the header */
+        text-align: center;
+    }
+    .seller-message p {
+        font-family: 'Bungee Spice', cursive;
+        font-weight: 200;
+        font-family: 'Signika Negative', sans-serif;
+        font-size: 25px;
+     
+     }
+    
+    
+      .order-status.completed {
+        background-color: #c8e6c9;
+        font-weight: 200; 
+        font-weight: bold;/* Green background for completed orders */
+      }
+    
+      .order-status.pending {
+        background-color: #fff59d; 
+        font-weight: 200; 
+        font-weight: bold;/* Yellow background for pending orders */
+      }
+
+</style>
+
+<div class="py-3 custom-navbar">
+    <div class="container">
+        <a href="{% url 'home' %}">Home</a>
+        <span>/</span>
+        <a href="{% url 'myorder' %}">My Order</a>
+        <span>/</span>
+    </div>
+</div>
+
+    
+<div class="container my-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h3 class="mb-0">Order View
+                        <a href="{% url 'myorder' %}" class="btn btn-warning float-end text-white">
+                            <i class="fa fa-reply"></i>&nbsp; Back
+                        </a>
+                    </h3>
+                     
+<div class="row shipping-details">
+    <div class="col-md-6">
+        <h4>Shipping Details</h4>
+        <hr>
+        <label>First Name</label>
+        <div class="border">{{ orders.fname }}</div>
+        <label>Last Name</label>
+        <div class="border">{{ orders.lname }}</div>
+        <label>Email</label>
+        <div class="border">{{ orders.email }}</div>
+        <label>Contact No</label>
+        <div class="border">{{ orders.phone }}</div>
+        <label>Address</label>
+        <div class="border">
+            {{ orders.address }}<br>
+            {{ orders.city }}, {{ orders.state }}<br>
+            {{ orders.country }}
+        </div>
+        <label>Zip code</label>
+        <div class="border">{{ orders.pincode }}</div>
+    </div>
+    <div class="col-md-6">
+        <table class="product-info-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in orderitems %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>
+                        <img src="{{ item.product.product_image.url }}" height="50px" width="50px" alt="Product Image">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h4 class="border p-1">Grand Total: {{ orders.total_price }}</h4>
+        <h6 class="border p-1">Payment Mode: {{ orders.payment_mode }}</h6>
+        <div class="border p-1 order-status {% if orders.status == 'Completed' %}completed{% else %}pending{% endif %}">
+            Order Status: {{ orders.status }}
+        </div>
+        <h6 class="border p-1">Tracking Number: {{ orders.tracking_no }}</h6>
+        {% if message_for_user %}
+        <div class="seller-message">
+            <h2>Message from Seller</h2>
+            <p>{{ message_for_user }}</p>
+        </div>    
+        
+        {% endif %}
+        
+    </div>
+</div>
+</div>
+  
+
+
+ 
+
+
+
+                     
+                       
+                      
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}
